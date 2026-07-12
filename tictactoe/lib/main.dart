@@ -1,7 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:tictactoe/app_color.dart';
+import 'package:tictactoe/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,15 +8,44 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: GameScreen());
+  }
+}
+
+class GameScreen extends StatelessWidget {
+  const GameScreen({super.key});
+
+  final int boardSize = 3;
+
+  //Back button
+
+  IconButton get backIcon {
+    return IconButton(
+      color: AppThemes.primaryPink,
+      onPressed: () {},
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
   Widget get appBarTitle {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Match Arena", style: AppThemes.styleAppbarTitle),
+          const Text("Match Arena", style: AppThemes.styleAppbarTitle),
           Text("QUICK MATCH [3x3]", style: AppThemes.styleAppbarSubTitle),
         ],
       ),
+    );
+  }
+
+  Dialog get helpDialog {
+    return Dialog(
+      backgroundColor: AppThemes.backgroundBlue,
+      shadowColor: AppThemes.backgroundWhite,
+      child: Text("This is in dialogue"),
     );
   }
 
@@ -35,7 +62,7 @@ class MyApp extends StatelessWidget {
   // Function to get a buttonLabel
   Container scoreLabel(
     String labelText, [
-    Color backgroundColor = AppThemes.appBlack,
+    Color backgroundColor = AppThemes.backgroundBlack,
     Color textColor = AppThemes.backgroundWhite,
   ]) {
     return Container(
@@ -50,16 +77,6 @@ class MyApp extends StatelessWidget {
         labelText,
         style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
       ),
-    );
-  }
-
-  //Back button
-
-  IconButton get backIcon {
-    return IconButton(
-      color: AppThemes.primaryPink,
-      onPressed: () {},
-      icon: Icon(Icons.arrow_back),
     );
   }
 
@@ -97,11 +114,19 @@ class MyApp extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            scoreLabel("YOU : 14", AppThemes.primaryPink, AppThemes.appBlack),
+            scoreLabel(
+              "YOU : 14",
+              AppThemes.primaryPink,
+              AppThemes.backgroundBlack,
+            ),
             SizedBox(width: 20),
             Text(" vs "),
             SizedBox(width: 20),
-            scoreLabel("BOT : 02", AppThemes.appBlack, AppThemes.primaryPink),
+            scoreLabel(
+              "BOT : 02",
+              AppThemes.backgroundBlack,
+              AppThemes.primaryPink,
+            ),
           ],
         ),
       ),
@@ -127,21 +152,17 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  final int boardSize = 3;
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          leading: backIcon,
-          title: appBarTitle,
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.help))],
-        ),
-        body: gameScreen,
-        backgroundColor: AppThemes.backgroundWhite,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        leading: backIcon,
+        title: appBarTitle,
+        actions: [IconButton(onPressed: () => {}, icon: Icon(Icons.help))],
       ),
+      body: gameScreen,
+      backgroundColor: AppThemes.backgroundWhite,
     );
   }
 }

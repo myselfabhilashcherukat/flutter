@@ -190,6 +190,57 @@ Examples: - boardTitle from boardSize - Current player from board matrix
 
 ------------------------------------------------------------------------
 
+# BuildContext
+
+## Purpose
+
+`BuildContext` represents a widget's location in the widget tree. Flutter uses it to locate inherited services such as `Theme`, `Navigator`, `MediaQuery`, and `MaterialLocalizations`.
+
+---
+
+## Mental Model
+
+Think of `BuildContext` as a GPS location.
+
+A widget is **what** you are.
+
+A `BuildContext` is **where** you are.
+
+Flutter starts searching upward from that location to find the services it needs.
+
+---
+
+## Common Uses
+
+```dart
+Theme.of(context)
+
+Navigator.of(context)
+
+MediaQuery.of(context)
+
+showDialog(context: context)
+```
+
+Each of these starts searching from the current widget's location.
+
+---
+
+## Important Rule
+
+Different widgets have different `BuildContext` objects.
+
+Even if two widgets are instances of the same class, their contexts may resolve different themes, navigators, or inherited widgets depending on where they are placed in the widget tree.
+
+---
+
+## Common Mistakes
+
+- Thinking `BuildContext` is the widget itself.
+- Assuming all contexts are interchangeable.
+- Using a context from above `MaterialApp` when an API needs services provided by `MaterialApp`.
+
+
 # 4. Flutter Widgets
 
 ## MaterialApp
@@ -956,3 +1007,6 @@ Container(
 - Using `Container.color` together with `decoration`.
 - Looking for a `borderRadius` property directly on `Container`.
 - Forgetting that `borderRadius` belongs to `BoxDecoration`.
+
+
+
