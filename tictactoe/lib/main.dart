@@ -1,5 +1,6 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:tictactoe/app_color.dart';
 
 void main() {
@@ -9,55 +10,40 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  Column get boardTitle {
-    return Column(
-      children: [
-        Text(
-          "Match Arena",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Color(AppColor.primaryPink),
-          ),
-        ),
-        Text(
-          "QUICK MATCH [3x3]",
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.normal,
-            color: Color(AppColor.appBlack),
-          ),
-        ),
-      ],
+  Widget get appBarTitle {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Match Arena", style: AppThemes.styleAppbarTitle),
+          Text("QUICK MATCH [3x3]", style: AppThemes.styleAppbarSubTitle),
+        ],
+      ),
     );
   }
 
   ButtonStyle get buttonStyle {
     return ElevatedButton.styleFrom(
       minimumSize: Size(100, 100),
-      textStyle: TextStyle(fontSize: 20),
-      foregroundColor: Color(AppColor.cardWhite),
-      backgroundColor: Color(AppColor.primaryPink),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      textStyle: TextStyle(fontSize: AppThemes.textLabelLarge),
+      foregroundColor: AppThemes.cardWhite,
+      backgroundColor: AppThemes.primaryPink,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
     );
   }
 
-  Container getTopText(
+  // Function to get a buttonLabel
+  Container scoreLabel(
     String labelText, [
-    Color backgroundColor = const Color(AppColor.appBlack),
-    Color textColor = const Color(AppColor.backgroundWhite),
+    Color backgroundColor = AppThemes.appBlack,
+    Color textColor = AppThemes.backgroundWhite,
   ]) {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor, //Colors.amber,
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      padding: EdgeInsetsGeometry.directional(
-        top: 5,
-        bottom: 5,
-        start: 8,
-        end: 8,
-      ),
+      padding: EdgeInsetsDirectional.only(top: 5, bottom: 5, start: 8, end: 8),
 
       //color: backgroundColor,
       child: Text(
@@ -70,65 +56,55 @@ class MyApp extends StatelessWidget {
   //Back button
 
   IconButton get backIcon {
-    return IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back));
+    return IconButton(
+      color: AppThemes.primaryPink,
+      onPressed: () {},
+      icon: Icon(Icons.arrow_back),
+    );
   }
 
   // X boxes
 
-  List<Widget> get boardBox {
-    List<Widget> columns = [];
+  List<Widget> get playCells {
+    List<Widget> rows = [];
     for (int j = 0; j < boardSize; j++) {
-      List<Widget> rows = [];
+      List<Widget> row = [];
       for (int i = 0; i < boardSize; i++) {
-        rows.add(
+        row.add(
           ElevatedButton(
-            onPressed: () {
-              print("$j$i");
-            },
+            key: super.key,
+            onPressed: () {},
             style: buttonStyle,
             child: Text("X"),
           ),
         );
       }
-      columns.add(Row(children: rows, spacing: 5));
+      rows.add(Row(mainAxisSize: MainAxisSize.min, spacing: 5, children: row));
     }
-    return columns;
+    return rows;
   }
 
-  Row get scoreBlock {
-    return Row(
-      children: [
-        Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Color(AppColor.cardWhite),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            height: 50,
-
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  getTopText(
-                    "YOU : 14",
-                    Color(AppColor.primaryPink),
-                    Color(AppColor.appBlack),
-                  ),
-                  SizedBox(width: 20),
-                  Text(" vs "),
-                  SizedBox(width: 20),
-                  getTopText(
-                    "BOT : 02",
-                    Color(AppColor.appBlack),
-                    Color(AppColor.primaryPink),
-                  ),
-                ],
-              ),
-            ),
-          ),
+  Widget get scoreBlock {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppThemes.cardWhite,
+          borderRadius: BorderRadius.circular(30),
         ),
-      ],
+
+        padding: EdgeInsets.symmetric(horizontal: 65, vertical: 10),
+
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            scoreLabel("YOU : 14", AppThemes.primaryPink, AppThemes.appBlack),
+            SizedBox(width: 20),
+            Text(" vs "),
+            SizedBox(width: 20),
+            scoreLabel("BOT : 02", AppThemes.appBlack, AppThemes.primaryPink),
+          ],
+        ),
+      ),
     );
   }
 
@@ -138,12 +114,14 @@ class MyApp extends StatelessWidget {
         SizedBox(height: 20),
         scoreBlock,
         SizedBox(height: 60),
-        Center(
-          child: Column(
-            children: boardBox,
-            spacing: 5,
-            mainAxisSize: MainAxisSize.min,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: AppThemes.cardWhite,
           ),
+          padding: EdgeInsets.all(10),
+
+          child: Column(spacing: 5, children: playCells),
         ),
       ],
     );
@@ -155,9 +133,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(leading: backIcon, title: boardTitle),
+        appBar: AppBar(
+          centerTitle: true,
+          leading: backIcon,
+          title: appBarTitle,
+          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.help))],
+        ),
         body: gameScreen,
-        backgroundColor: Color(AppColor.backgroundWhite),
+        backgroundColor: AppThemes.backgroundWhite,
       ),
     );
   }
